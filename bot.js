@@ -26,6 +26,28 @@ bot.onText(/Kursga yozilish/, (msg) => {
   const chatId = msg.chat.id;
   userData[chatId] = {}; // Yangi foydalanuvchi uchun ma'lumotlar obyektini yaratish
 
+  // Kurslarni tanlash
+  const options = {
+    reply_markup: {
+      keyboard: [
+        ['Web-dasturlash', 'SMM', 'Mobilografiya']
+      ],
+      resize_keyboard: true,
+      one_time_keyboard: true
+    }
+  };
+
+  bot.sendMessage(chatId, 'Kurslardan birini tanlang:', options);
+});
+
+// Kursni tanlash
+bot.onText(/(Web-dasturlash|SMM|Mobilografiya)/, (msg, match) => {
+  const chatId = msg.chat.id;
+  const selectedCourse = match[1];
+
+  // Tanlangan kursni foydalanuvchi uchun saqlash
+  userData[chatId].course = selectedCourse;
+
   // Birinchi savol: Ism va familiya
   bot.sendMessage(chatId, 'Ismingizni va familiyangizni kiriting:', {
     reply_markup: { force_reply: true }
@@ -66,7 +88,7 @@ bot.on('message', (msg) => {
       const adminChatId = '-1002351154111'; // Admin guruhining chat ID
 
       // Admin guruhiga ma'lumot yuborish
-      bot.sendMessage(adminChatId, `Yangi yozilish: \nIsm: ${user.name}\nYosh: ${user.age}\nTelefon: ${user.phone}\nManzil: ${user.address}`);
+      bot.sendMessage(adminChatId, `Yangi yozilish: \nKurs: ${user.course}\nIsm: ${user.name}\nYosh: ${user.age}\nTelefon: ${user.phone}\nManzil: ${user.address}`);
 
       // Foydalanuvchiga tasdiq xabari
       bot.sendMessage(chatId, 'Tez orada adminimiz siz bilan aloqaga chiqadi.');
